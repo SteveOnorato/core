@@ -1,5 +1,5 @@
 """Support for Aqualink pool lights."""
-import logging
+from iaqualink import AqualinkLightEffect
 
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
@@ -14,8 +14,6 @@ from homeassistant.helpers.typing import HomeAssistantType
 
 from . import AqualinkEntity, refresh_system
 from .const import DOMAIN as AQUALINK_DOMAIN
-
-_LOGGER = logging.getLogger(__name__)
 
 PARALLEL_UPDATES = 0
 
