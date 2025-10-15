@@ -97,7 +97,12 @@ class LogEntry:
         self.first_occurred = self.timestamp = record.created
         self.name = record.name
         self.level = record.levelname
-        self.message = deque([record.getMessage()], maxlen=5)
+        try:
+            formatted_message = record.getMessage()
+        except TypeError:
+            # If the log message has the wrong number of arguments, we should still record it.
+            formatted_message = f"{record.msg} {record.args}"
+        self.message = deque([formatted_message], maxlen=5)
         self.exception = ""
         self.root_cause = None
         if record.exc_info:

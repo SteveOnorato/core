@@ -4,17 +4,19 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
 )
 
-from . import SleepIQSensor
+from . import SleepIQEntity, SleepIQData
 from .const import DOMAIN, IS_IN_BED, SENSOR_TYPES, SIDES
+from ...core import HomeAssistant
 
 
-def setup_platform(hass, config, add_entities, discovery_info=None):
+def setup_platform(hass: HomeAssistant, config, add_entities, discovery_info=None):
     """Set up the SleepIQ sensors."""
+    _ = config  # Unused.
     if discovery_info is None:
         return
 
-    data = hass.data[DOMAIN]
-    data.update()
+    data: SleepIQData = hass.data[DOMAIN]
+    data.update_account_from_network()
 
     dev = []
     for bed_id, bed in data.beds.items():
@@ -24,7 +26,7 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     add_entities(dev)
 
 
-class IsInBedBinarySensor(SleepIQSensor, BinarySensorEntity):
+class IsInBedBinarySensor(SleepIQEntity, BinarySensorEntity):
     """Implementation of a SleepIQ presence sensor."""
 
     def __init__(self, sleepiq_data, bed_id, side):
